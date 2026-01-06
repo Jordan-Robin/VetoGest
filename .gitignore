@@ -1,0 +1,70 @@
+# ======================
+# Node / React / Vite
+# ======================
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+.vite/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ======================
+# Django / Python
+# ======================
+*.pyc
+*.pyo
+__pycache__/
+*.sqlite3
+*.log
+*.pot
+*.py[cod]
+*.swp
+*.DS_Store
+*.coverage
+htmlcov/
+celerybeat-schedule
+instance/
+local_settings.py
+
+# Env / Virtualenv
+venv/
+.env/
+.envs/
+.venv/
+
+# ======================
+# Docker
+# ======================
+docker-compose.override.yml
+**/Dockerfile*
+**/docker-compose*.yml
+*.log
+*.pid
+tmp/
+*.swp
+
+# ======================
+# IDEs
+# ======================
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Cursor (JetBrains plugin)
+.cursor/
+
+# ======================
+# System
+# ======================
+.DS_Store
+Thumbs.db
