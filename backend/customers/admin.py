@@ -5,7 +5,7 @@ from customers.models import Customer
 
 @admin.register(Customer)
 class CustomerAdmin(admin.ModelAdmin):
-    list_display = ('lastname', 'firstname', 'email', 'phone_number', 'city', 'archive')
+    list_display = ('last_name', 'first_name', 'email', 'phone_number', 'city', 'archive')
     list_filter = ('archive', 'city')
-    search_fields = ('lastname', 'firstname', 'email', 'phone_number', 'city')
-    ordering = ('lastname', 'firstname')
+    search_fields = ('last_name', 'first_name', 'email', 'phone_number', 'city')
+    ordering = ('last_name', 'first_name')
