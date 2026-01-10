@@ -1,4 +1,4 @@
-import { CreateClientForm } from './components/CreateClientForm'
+import { CreateCustomerForm } from './features/customers/components/CreateCustomerForm/CreateCustomerForm'
 import './App.css'
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
         <h1>VetoGest</h1>
       </header>
       <main>
-        <CreateClientForm />
+        <CreateCustomerForm />
       </main>
     </>
   )

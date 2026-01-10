@@ -119,10 +119,20 @@ button[type="submit"]:disabled {
     color: #ddd;
   }
   
-  .form-group input {
-    background: #333;
-    border-color: #444;
-    color: #fff;
+  .form-group input, 
+  .form-group textarea {
+      background: #333;
+      border: 1px solid #444;
+      color: #fff;
+      width: 100%;
+      padding: 12px;
+      border-radius: 4px;
+      box-sizing: border-box;
+  }
+
+  .form-group textarea {
+      min-height: 80px;
+      resize: vertical;
   }
 
   .status-message.success {
