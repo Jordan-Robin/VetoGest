@@ -1,0 +1,80 @@
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.input,
+.textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.textarea {
+  min-height: 80px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.input:focus,
+.textarea:focus {
+  border-color: #646cff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
+}
+
+.input.error,
+.textarea.error {
+  border-color: #e74c3c;
+}
+
+.input.error:focus,
+.textarea.error:focus {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
+}
+
+.errorMessage {
+  color: #e74c3c;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  .label {
+    color: #ddd;
+  }
+
+  .input,
+  .textarea {
+    background: #333;
+    border-color: #444;
+    color: #fff;
+  }
+
+  .input:focus,
+  .textarea:focus {
+    border-color: #646cff;
+    background: #3a3a3a;
+  }
+
+  .input.error,
+  .textarea.error {
+    border-color: #e74c3c;
+  }
+
+  .errorMessage {
+    color: #ff6b6b;
+  }
+}

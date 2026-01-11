@@ -29,32 +29,6 @@ header h1 {
   margin-bottom: 1.5rem;
 }
 
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #555;
-}
-
-.form-group input {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 1rem;
-  box-sizing: border-box; /* Ensures padding doesn't affect width */
-}
-
-.form-group input:focus {
-  border-color: #646cff;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(100, 108, 255, 0.2);
-}
-
 .form-row {
   display: flex;
   gap: 1rem;
@@ -110,29 +84,9 @@ button[type="submit"]:disabled {
   .client-form-container {
     background: #2a2a2a;
   }
-  
+
   .client-form-container h2 {
     color: #fff;
-  }
-  
-  .form-group label {
-    color: #ddd;
-  }
-  
-  .form-group input, 
-  .form-group textarea {
-      background: #333;
-      border: 1px solid #444;
-      color: #fff;
-      width: 100%;
-      padding: 12px;
-      border-radius: 4px;
-      box-sizing: border-box;
-  }
-
-  .form-group textarea {
-      min-height: 80px;
-      resize: vertical;
   }
 
   .status-message.success {

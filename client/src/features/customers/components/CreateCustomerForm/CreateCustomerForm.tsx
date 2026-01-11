@@ -3,6 +3,7 @@ import type { Customer } from "@/types/customer";
 import { customerService } from "@/features/customers/services/customerService";
 import { validateCustomer } from "@/features/customers/utils/customerValidator";
 import { getAxiosErrorMessage } from "@/utils/errors";
+import { FormField } from "@/components/ui/FormField/FormField";
 
 // Initialisation de l'objet Customer
 const initialFormData: Customer = {
@@ -54,7 +55,7 @@ export const CreateCustomerForm: React.FC = () => {
     setStatus({ type: "", message: "" });
 
     try {
-      // Envoi des données au serveur
+      // Envoi des données au serveur avec gestion des erreurs
       const data = await customerService.create(formData);
       console.log("🚀 [Success] Client créé avec ID: ", data.id);
       setStatus({
@@ -83,106 +84,80 @@ export const CreateCustomerForm: React.FC = () => {
       )}
 
       <form onSubmit={handleSubmit} className="client-form">
-        <div className="form-group">
-          <label htmlFor="lastName">Nom *</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-            placeholder="Dupont"
-          />
-        </div>
+        <FormField
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
+          placeholder="Dupont"
+          required
+          label="Nom"
+        />
 
-        <div className="form-group">
-          <label htmlFor="firstName">Prénom *</label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-            placeholder="Jean"
-          />
-        </div>
+        <FormField
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+          placeholder="Jean"
+          required
+          label="Prénom"
+        />
 
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="jean.dupont@email.com"
-          />
-        </div>
+        <FormField
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="jean.dupont@email.com"
+          required
+          label="Email"
+        />
 
-        <div className="form-group">
-          <label htmlFor="phoneNumber">Téléphone *</label>
-          <input
-            type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            required
-            placeholder="06 12 34 56 78"
-          />
-        </div>
+        <FormField
+          name="phoneNumber"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          placeholder="06 12 34 56 78"
+          required
+          label="Téléphone"
+        />
 
-        <div className="form-group">
-          <label htmlFor="street">Rue</label>
-          <input
-            type="text"
-            id="street"
-            name="street"
-            value={formData.street}
-            onChange={handleChange}
-            placeholder="123 Rue de la République"
-          />
-        </div>
+        <FormField
+          name="street"
+          value={formData.street}
+          onChange={handleChange}
+          placeholder="123 Rue de la République"
+          required
+          label="Rue"
+        />
 
         <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="zipCode">Code Postal</label>
-            <input
-              type="text"
-              id="zipCode"
-              name="zipCode"
-              value={formData.zipCode}
-              onChange={handleChange}
-              placeholder="75001"
-              maxLength={10}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="city">Ville</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              placeholder="Paris"
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="description">Notes</label>
-          <textarea
-            id="description"
-            name="description"
-            maxLength={200}
-            value={formData.description}
+          <FormField
+            name="zipCode"
+            value={formData.zipCode}
             onChange={handleChange}
-          ></textarea>
+            placeholder="56200"
+            required
+            label="Code Postal"
+          />
+
+          <FormField
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="Glénac"
+            required
+            label="Ville"
+          />
         </div>
+
+        <FormField
+          isTextArea
+          name="description"
+          value={formData.description || ""}
+          onChange={handleChange}
+          placeholder="Glénac"
+          label="Description / notes"
+          maxLength={200}
+        />
 
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Envoi..." : "Créer le Client"}
