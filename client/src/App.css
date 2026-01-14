@@ -1,32 +1,11 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 2rem;
-  color: #646cff;
-}
-
-/* Client Form Styles */
 .client-form-container {
   max-width: 500px;
-  margin: 0 auto;
+  margin: 2rem auto;
   padding: 2rem;
-  background: #f9f9f9;
+  background: var(--container-bg);
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   text-align: left;
-}
-
-.client-form-container h2 {
-  margin-top: 0;
-  color: #333;
-  text-align: center;
-  margin-bottom: 1.5rem;
 }
 
 .form-row {
@@ -34,70 +13,47 @@ header h1 {
   gap: 1rem;
 }
 
-.form-row .form-group {
-  flex: 1;
-}
-
 button[type="submit"] {
   width: 100%;
   padding: 0.75rem;
-  background-color: #646cff;
+  background-color: var(--primary-color);
   color: white;
   border: none;
   border-radius: 4px;
-  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s;
-  margin-top: 1rem;
 }
 
-button[type="submit"]:hover {
-  background-color: #535bf2;
+button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--primary-hover);
 }
 
 button[type="submit"]:disabled {
-  background-color: #ccc;
+  filter: grayscale(1);
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
 .status-message {
   padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   text-align: center;
 }
 
 .status-message.success {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: var(--success-bg);
+  color: var(--success-text);
   border: 1px solid #c3e6cb;
 }
 
 .status-message.error {
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-}
-
-@media (prefers-color-scheme: dark) {
-  .client-form-container {
-    background: #2a2a2a;
-  }
-
-  .client-form-container h2 {
-    color: #fff;
-  }
-
-  .status-message.success {
-    background-color: #1e4620;
-    color: #d4edda;
-    border-color: #2b572e;
-  }
-
-  .status-message.error {
-    background-color: #4c1114;
-    color: #f8d7da;
-    border-color: #6a1a21;
-  }
+  background-color: #fce8e6;
+  color: var(--error-color);
+  border: 1px solid #fadbd8;
 }

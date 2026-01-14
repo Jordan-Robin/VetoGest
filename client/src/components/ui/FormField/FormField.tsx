@@ -1,4 +1,5 @@
 import styles from "./FormField.module.css";
+import { FormFieldError } from "@/components/ui/FormFieldError/FormFieldError";
 
 interface FormFieldProps {
   name: string;
@@ -68,11 +69,7 @@ export const FormField = ({
         />
       )}
 
-      {error && (
-        <span id={`${fieldId}-error`} className={styles.errorMessage}>
-          {error}
-        </span>
-      )}
+      <FormFieldError message={error} fieldId={fieldId} />
     </div>
   );
 };

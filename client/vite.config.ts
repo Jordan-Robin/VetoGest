@@ -1,17 +1,23 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import path from 'path';
+/// <reference types="vitest/config" />
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:8000'
-    }
+      "/api": "http://localhost:8000",
+    },
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
-  }
-})
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  test: {
+    environment: "jsdom",
+    globals: true,
+    setupFiles: "./src/setupTests.js",
+  },
+});

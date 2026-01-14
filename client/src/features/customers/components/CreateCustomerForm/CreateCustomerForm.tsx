@@ -5,6 +5,18 @@ import { validateCustomer } from "@/features/customers/utils/customerValidator";
 import { getAxiosErrorMessage } from "@/utils/errors";
 import { FormField } from "@/components/ui/FormField/FormField";
 
+// Mapping des labels
+const LABELS: Partial<Record<keyof Customer, string>> = {
+  lastName: "Nom",
+  firstName: "Prénom",
+  email: "E-mail",
+  phoneNumber: "Téléphone",
+  street: "Rue",
+  zipCode: "Code Postal",
+  city: "Ville",
+  description: "Description / notes",
+};
+
 // Initialisation de l'objet Customer
 const initialFormData: Customer = {
   lastName: "",
@@ -20,6 +32,9 @@ const initialFormData: Customer = {
 // Composant du formulaire de création d'un Customer
 export const CreateCustomerForm: React.FC = () => {
   const [formData, setFormData] = useState<Customer>(initialFormData);
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof Customer, string>>
+  >({});
   const [status, setStatus] = useState<{
     type: "success" | "error" | "";
     message: string;
@@ -35,18 +50,44 @@ export const CreateCustomerForm: React.FC = () => {
       ...prev,
       [name]: value,
     }));
+
+    // Nettoyer l'erreur du champ en cours de modification
+    if (fieldErrors[name as keyof Customer]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
   // Soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFieldErrors({});
 
-    // Validation des champs obligatoires
-    const { isValid } = validateCustomer(formData);
+    // Validation du formulaire
+    const { isValid, missingFields, errors } = validateCustomer(formData);
+
     if (!isValid) {
+      const newFieldErrors: typeof fieldErrors = {};
+
+      // Gestion des champs obligatoires manquants
+      missingFields.forEach((field) => {
+        newFieldErrors[field] = `Le champ '${
+          LABELS[field] || field
+        }' est obligatoire.`;
+      });
+
+      // Gestion des erreurs spécifiques (format)
+      if (errors.includes("email_format")) {
+        newFieldErrors.email = "Le format de l'adresse email est incorrect.";
+      }
+      if (errors.includes("phone_format")) {
+        newFieldErrors.phoneNumber =
+          "Le numéro de téléphone doit contenir 10 chiffres.";
+      }
+
+      setFieldErrors(newFieldErrors);
       setStatus({
         type: "error",
-        message: "Veuillez remplir tous les champs obligatoires (*).",
+        message: "Merci de corriger les erreurs dans le formulaire.",
       });
       return;
     }
@@ -83,14 +124,15 @@ export const CreateCustomerForm: React.FC = () => {
         <div className={`status-message ${status.type}`}>{status.message}</div>
       )}
 
-      <form onSubmit={handleSubmit} className="client-form">
+      <form onSubmit={handleSubmit} className="client-form" noValidate>
         <FormField
           name="lastName"
           value={formData.lastName}
           onChange={handleChange}
           placeholder="Dupont"
           required
-          label="Nom"
+          label={LABELS.lastName}
+          error={fieldErrors.lastName}
         />
 
         <FormField
@@ -99,7 +141,8 @@ export const CreateCustomerForm: React.FC = () => {
           onChange={handleChange}
           placeholder="Jean"
           required
-          label="Prénom"
+          label={LABELS.firstName}
+          error={fieldErrors.firstName}
         />
 
         <FormField
@@ -108,7 +151,8 @@ export const CreateCustomerForm: React.FC = () => {
           onChange={handleChange}
           placeholder="jean.dupont@email.com"
           required
-          label="Email"
+          label={LABELS.email}
+          error={fieldErrors.email}
         />
 
         <FormField
@@ -117,7 +161,8 @@ export const CreateCustomerForm: React.FC = () => {
           onChange={handleChange}
           placeholder="06 12 34 56 78"
           required
-          label="Téléphone"
+          label={LABELS.phoneNumber}
+          error={fieldErrors.phoneNumber}
         />
 
         <FormField
@@ -126,7 +171,8 @@ export const CreateCustomerForm: React.FC = () => {
           onChange={handleChange}
           placeholder="123 Rue de la République"
           required
-          label="Rue"
+          label={LABELS.street}
+          error={fieldErrors.street}
         />
 
         <div className="form-row">
@@ -136,7 +182,8 @@ export const CreateCustomerForm: React.FC = () => {
             onChange={handleChange}
             placeholder="56200"
             required
-            label="Code Postal"
+            label={LABELS.zipCode}
+            error={fieldErrors.zipCode}
           />
 
           <FormField
@@ -145,7 +192,8 @@ export const CreateCustomerForm: React.FC = () => {
             onChange={handleChange}
             placeholder="Glénac"
             required
-            label="Ville"
+            label={LABELS.city}
+            error={fieldErrors.city}
           />
         </div>
 
@@ -154,9 +202,9 @@ export const CreateCustomerForm: React.FC = () => {
           name="description"
           value={formData.description || ""}
           onChange={handleChange}
-          placeholder="Glénac"
-          label="Description / notes"
+          label={LABELS.description}
           maxLength={200}
+          error={fieldErrors.description}
         />
 
         <button type="submit" disabled={isSubmitting}>
