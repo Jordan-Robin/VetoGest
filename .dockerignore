@@ -1,0 +1,25 @@
+# --- Git & IDE ---
+.git
+.vscode
+.idea
+*.swp
+
+# --- Python / Django ---
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/db.sqlite3
+**/.venv
+**/venv
+.pytest_cache
+
+# --- Frontend (Node/React) ---
+**/node_modules
+**/dist
+**/npm-debug.log
+
+# --- Secrets & Data ---
+.env
+**/postgres_data
+**/notes.md

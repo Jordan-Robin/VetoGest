@@ -3,6 +3,19 @@ import type { Customer } from "@/types/customer";
 import { customerService } from "@/features/customers/services/customerService";
 import { validateCustomer } from "@/features/customers/utils/customerValidator";
 import { getAxiosErrorMessage } from "@/utils/errors";
+import { FormField } from "@/components/ui/FormField/FormField";
+
+// Mapping des labels
+const LABELS: Partial<Record<keyof Customer, string>> = {
+  lastName: "Nom",
+  firstName: "Prénom",
+  email: "E-mail",
+  phoneNumber: "Téléphone",
+  street: "Rue",
+  zipCode: "Code Postal",
+  city: "Ville",
+  description: "Description / notes",
+};
 
 // Initialisation de l'objet Customer
 const initialFormData: Customer = {
@@ -19,6 +32,9 @@ const initialFormData: Customer = {
 // Composant du formulaire de création d'un Customer
 export const CreateCustomerForm: React.FC = () => {
   const [formData, setFormData] = useState<Customer>(initialFormData);
+  const [fieldErrors, setFieldErrors] = useState<
+    Partial<Record<keyof Customer, string>>
+  >({});
   const [status, setStatus] = useState<{
     type: "success" | "error" | "";
     message: string;
@@ -34,18 +50,44 @@ export const CreateCustomerForm: React.FC = () => {
       ...prev,
       [name]: value,
     }));
+
+    // Nettoyer l'erreur du champ en cours de modification
+    if (fieldErrors[name as keyof Customer]) {
+      setFieldErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
   };
 
   // Soumission du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setFieldErrors({});
 
-    // Validation des champs obligatoires
-    const { isValid } = validateCustomer(formData);
+    // Validation du formulaire
+    const { isValid, missingFields, errors } = validateCustomer(formData);
+
     if (!isValid) {
+      const newFieldErrors: typeof fieldErrors = {};
+
+      // Gestion des champs obligatoires manquants
+      missingFields.forEach((field) => {
+        newFieldErrors[field] = `Le champ '${
+          LABELS[field] || field
+        }' est obligatoire.`;
+      });
+
+      // Gestion des erreurs spécifiques (format)
+      if (errors.includes("email_format")) {
+        newFieldErrors.email = "Le format de l'adresse email est incorrect.";
+      }
+      if (errors.includes("phone_format")) {
+        newFieldErrors.phoneNumber =
+          "Le numéro de téléphone doit contenir 10 chiffres.";
+      }
+
+      setFieldErrors(newFieldErrors);
       setStatus({
         type: "error",
-        message: "Veuillez remplir tous les champs obligatoires (*).",
+        message: "Merci de corriger les erreurs dans le formulaire.",
       });
       return;
     }
@@ -54,7 +96,7 @@ export const CreateCustomerForm: React.FC = () => {
     setStatus({ type: "", message: "" });
 
     try {
-      // Envoi des données au serveur
+      // Envoi des données au serveur avec gestion des erreurs
       const data = await customerService.create(formData);
       console.log("🚀 [Success] Client créé avec ID: ", data.id);
       setStatus({
@@ -82,107 +124,88 @@ export const CreateCustomerForm: React.FC = () => {
         <div className={`status-message ${status.type}`}>{status.message}</div>
       )}
 
-      <form onSubmit={handleSubmit} className="client-form">
-        <div className="form-group">
-          <label htmlFor="lastName">Nom *</label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={formData.lastName}
-            onChange={handleChange}
-            required
-            placeholder="Dupont"
-          />
-        </div>
+      <form onSubmit={handleSubmit} className="client-form" noValidate>
+        <FormField
+          name="lastName"
+          value={formData.lastName}
+          onChange={handleChange}
+          placeholder="Dupont"
+          required
+          label={LABELS.lastName}
+          error={fieldErrors.lastName}
+        />
 
-        <div className="form-group">
-          <label htmlFor="firstName">Prénom *</label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={formData.firstName}
-            onChange={handleChange}
-            required
-            placeholder="Jean"
-          />
-        </div>
+        <FormField
+          name="firstName"
+          value={formData.firstName}
+          onChange={handleChange}
+          placeholder="Jean"
+          required
+          label={LABELS.firstName}
+          error={fieldErrors.firstName}
+        />
 
-        <div className="form-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="jean.dupont@email.com"
-          />
-        </div>
+        <FormField
+          name="email"
+          value={formData.email}
+          onChange={handleChange}
+          placeholder="jean.dupont@email.com"
+          required
+          label={LABELS.email}
+          error={fieldErrors.email}
+        />
 
-        <div className="form-group">
-          <label htmlFor="phoneNumber">Téléphone *</label>
-          <input
-            type="tel"
-            id="phoneNumber"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-            required
-            placeholder="06 12 34 56 78"
-          />
-        </div>
+        <FormField
+          name="phoneNumber"
+          value={formData.phoneNumber}
+          onChange={handleChange}
+          placeholder="06 12 34 56 78"
+          required
+          label={LABELS.phoneNumber}
+          error={fieldErrors.phoneNumber}
+        />
 
-        <div className="form-group">
-          <label htmlFor="street">Rue</label>
-          <input
-            type="text"
-            id="street"
-            name="street"
-            value={formData.street}
-            onChange={handleChange}
-            placeholder="123 Rue de la République"
-          />
-        </div>
+        <FormField
+          name="street"
+          value={formData.street}
+          onChange={handleChange}
+          placeholder="123 Rue de la République"
+          required
+          label={LABELS.street}
+          error={fieldErrors.street}
+        />
 
         <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="zipCode">Code Postal</label>
-            <input
-              type="text"
-              id="zipCode"
-              name="zipCode"
-              value={formData.zipCode}
-              onChange={handleChange}
-              placeholder="75001"
-              maxLength={10}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="city">Ville</label>
-            <input
-              type="text"
-              id="city"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              placeholder="Paris"
-            />
-          </div>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="description">Notes</label>
-          <textarea
-            id="description"
-            name="description"
-            maxLength={200}
-            value={formData.description}
+          <FormField
+            name="zipCode"
+            value={formData.zipCode}
             onChange={handleChange}
-          ></textarea>
+            placeholder="56200"
+            required
+            label={LABELS.zipCode}
+            error={fieldErrors.zipCode}
+          />
+
+          <FormField
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="Glénac"
+            required
+            label={LABELS.city}
+            error={fieldErrors.city}
+          />
         </div>
+
+        <FormField
+          isTextArea
+          name="description"
+          value={formData.description || ""}
+          onChange={handleChange}
+          label={LABELS.description}
+          maxLength={200}
+          error={fieldErrors.description}
+        />
 
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Envoi..." : "Créer le Client"}
