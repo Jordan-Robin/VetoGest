@@ -4,7 +4,13 @@ from users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, required=False, validators=[validate_password])
+    password = serializers.CharField(
+        write_only=True,
+        required=False,
+        allow_blank=False,
+        style={'input_type': 'password'},
+        validators=[validate_password]
+    )
     role_display = serializers.CharField(source='get_role_display', read_only=True)
 
     class Meta:
@@ -39,6 +45,12 @@ class UserSerializer(serializers.ModelSerializer):
                     "Seul un superutilisateur peut attribuer le rôle administrateur."
                 )
         return value
+
+    def validate(self, attrs):
+        """Assure que le mot de passe est fourni lors de la création d'un utilisateur."""
+        if not self.instance and 'password' not in attrs:
+            raise serializers.ValidationError({"password": "Ce champ est obligatoire à la création."})
+        return attrs
 
     def create(self, validated_data):
         return User.objects.create_user(**validated_data)

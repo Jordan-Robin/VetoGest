@@ -107,6 +107,14 @@ SPECTACULAR_SETTINGS = {
     'DESCRIPTION': 'Gestion de clinique vétérinaire',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
+    # Nettoyage des headers et des types de contenu pour postman
+    'PARSER_WHITELIST': ['rest_framework.parsers.JSONParser'],
+    'RENDERER_WHITELIST': ['rest_framework.renderers.JSONRenderer'],
+    'COMPONENT_SPLIT_REQUEST': True,
+    'POSTPROCESSING_HOOKS': [
+        'drf_spectacular.hooks.postprocess_schema_enums'
+    ],
+    'OAS_VERSION': '3.0.3',
 }
 
 MIDDLEWARE = [

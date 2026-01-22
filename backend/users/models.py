@@ -37,7 +37,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
-    role = models.CharField(max_length=12, choices=Role.choices)
+    role = models.CharField(max_length=20, choices=Role.choices)
     birth_date = models.DateField(blank=True, null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
     street = models.CharField(max_length=255, blank=True, null=True)
@@ -55,6 +55,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
+
+    class Meta:
+        ordering = ['id']
 
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.email}"
