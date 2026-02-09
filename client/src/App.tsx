@@ -1,5 +1,5 @@
-import { CreateCustomerForm } from './features/customers/components/CreateCustomerForm/CreateCustomerForm'
-import './App.css'
+import { CreateCustomerForm } from "@features/customers/components/CreateCustomerForm";
+import "./App.css";
 
 function App() {
   return (
@@ -11,7 +11,7 @@ function App() {
         <CreateCustomerForm />
       </main>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
