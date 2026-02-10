@@ -1,17 +1,38 @@
-import { CreateCustomerForm } from './features/customers/components/CreateCustomerForm/CreateCustomerForm'
-import './App.css'
+import { Outlet, Navigate, useLocation } from "react-router-dom";
+import { AuthProvider } from "./context/AuthProvider.context";
+import { useAuth } from "./context/AuthContext";
+import "./App.css";
+import { PATHS } from "./routing/routingPaths";
 
-function App() {
+const AppContent = () => {
+  const { isAuthenticated, logout } = useAuth();
+  const location = useLocation();
+
+  if (!isAuthenticated && location.pathname !== `/${PATHS.LOGIN}`) {
+    return <Navigate to={PATHS.LOGIN} replace />;
+  }
+
+  if (isAuthenticated && location.pathname === `/${PATHS.LOGIN}`) {
+    return <Navigate to={PATHS.HOME} replace />;
+  }
+
   return (
     <>
       <header>
         <h1>VetoGest</h1>
+        <button onClick={logout} className="logout-btn">
+          Déconnexion
+        </button>
       </header>
       <main>
-        <CreateCustomerForm />
+        <Outlet />
       </main>
     </>
-  )
-}
+  );
+};
 
-export default App
+export const App = () => (
+  <AuthProvider>
+    <AppContent />
+  </AuthProvider>
+);
