@@ -1,73 +1,116 @@
-# React + TypeScript + Vite
+# VetoGest — Client
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Interface web de l'application VetoGest, construite avec React, TypeScript et Vite.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React 19
+- TypeScript 5.9
+- Vite 7
+- Axios
+- Vitest + Testing Library (tests)
+- ESLint
 
-## React Compiler
+## Setup local
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prérequis
 
-## Expanding the ESLint configuration
+- Node.js 20+
+- npm (ou autre gestionnaire de paquets)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Installation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+```bash
+cd client
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Installer les dépendances
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Variables d'environnement
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Créer un fichier `client/.env` (ou utiliser les fichiers `.env.development` / `.env.production` existants) :
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
+```env
+VITE_API_URL=http://localhost:8000
+```
+
+| Variable       | Description                  | Exemple                 |
+| -------------- | ---------------------------- | ----------------------- |
+| `VITE_API_URL` | URL de base de l'API backend | `http://localhost:8000` |
+
+> En développement, les appels `/api/*` sont automatiquement proxyfiés vers le backend via la configuration Vite.
+
+## Scripts disponibles
+
+| Commande          | Description                               |
+| ----------------- | ----------------------------------------- |
+| `npm run dev`     | Lance le serveur de développement (HMR)   |
+| `npm run build`   | Compile TypeScript et build de production |
+| `npm run preview` | Prévisualise le build de production       |
+| `npm run test`    | Lance les tests avec Vitest               |
+| `npm run lint`    | Analyse du code avec ESLint               |
+
+### Développement
+
+```bash
+npm run dev
+```
+
+L'application est accessible sur http://localhost:5173.
+
+### Tests
+
+```bash
+# Lancer les tests en mode watch
+npm run test
+
+# Lancer les tests une seule fois
+npx vitest run
+```
+
+## Structure du projet
+
+```
+client/src/
+├── components/         → Composants UI réutilisables
+│   └── ui/
+│       ├── FormField/          → Champ de formulaire générique
+│       └── FormFieldError/     → Affichage d'erreur de champ
+├── features/           → Modules métier
+│   └── customers/
+│       ├── components/         → Composants spécifiques aux clients
+│       │   └── CreateCustomerForm/
+│       ├── services/           → Appels API (customerService)
+│       └── utils/              → Validation (customerValidator)
+├── services/           → Configuration Axios (api.ts)
+├── types/              → Types TypeScript (Customer, etc.)
+├── utils/              → Utilitaires partagés (errors.ts)
+├── App.tsx             → Composant racine
+├── main.tsx            → Point d'entrée
+└── setupTests.ts       → Configuration des tests
+```
+
+## Alias de chemin
+
+L'alias `@/` est configuré pour pointer vers `src/` :
+
+```typescript
+import { FormField } from "@/components/ui/FormField/FormField";
+import type { Customer } from "@/types/customer";
+```
+
+Cette configuration est définie dans [tsconfig.app.json](tsconfig.app.json) et [vite.config.ts](vite.config.ts).
+
+## Proxy API
+
+En mode développement, toutes les requêtes vers `/api/*` sont automatiquement redirigées vers le backend grâce à la configuration dans [vite.config.ts](vite.config.ts) :
+
+```typescript
+proxy: {
+  "/api": {
+    target: env.VITE_API_URL,
+    changeOrigin: true,
   },
-])
+},
 ```
