@@ -1,18 +1,19 @@
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider } from "./context/AuthProvider.context";
-import { LoginForm } from "./features/auth/components/LoginForm/LoginForm";
-import { CreateCustomerForm } from "./features/customers/components/CreateCustomerForm/CreateCustomerForm";
 import { useAuth } from "./context/AuthContext";
 import "./App.css";
+import { PATHS } from "./routing/routingPaths";
 
 const AppContent = () => {
-  const { isAuthenticated, isLoading, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
+  const location = useLocation();
 
-  if (isLoading) {
-    return <div>Chargement...</div>;
+  if (!isAuthenticated && location.pathname !== `/${PATHS.LOGIN}`) {
+    return <Navigate to={PATHS.LOGIN} replace />;
   }
 
-  if (!isAuthenticated) {
-    return <LoginForm />;
+  if (isAuthenticated && location.pathname === `/${PATHS.LOGIN}`) {
+    return <Navigate to={PATHS.HOME} replace />;
   }
 
   return (
@@ -24,16 +25,14 @@ const AppContent = () => {
         </button>
       </header>
       <main>
-        <CreateCustomerForm />
+        <Outlet />
       </main>
     </>
   );
 };
 
-export const App = () => {
-  return (
-    <AuthProvider>
-      <AppContent />
-    </AuthProvider>
-  );
-};
+export const App = () => (
+  <AuthProvider>
+    <AppContent />
+  </AuthProvider>
+);
